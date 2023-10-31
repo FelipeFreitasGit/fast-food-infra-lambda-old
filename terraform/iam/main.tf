@@ -1,5 +1,5 @@
 resource "aws_iam_role" "lambda_execution_role" {
-  name = "lambda_execution_role"
+  name = "MyLambdaExecutionRole"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -19,9 +19,8 @@ resource "aws_iam_role" "lambda_execution_role" {
 }
 
 resource "aws_iam_policy" "lambda_policy" {
-  name = "lambda_policy"
-
-  description = "policy for Lambda function"
+  name        = "MyLambdaPolicy"
+  description = "Policy for Lambda function"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -48,4 +47,12 @@ resource "aws_iam_policy" "lambda_policy" {
 resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
   policy_arn = aws_iam_policy.lambda_policy.arn
   role       = aws_iam_role.lambda_execution_role.name
+}
+
+resource "aws_lambda_permission" "invoke_permission" {
+  statement_id  = "AllowMyAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = var.lambda_authorizadora_function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = var.execution_arn
 }
