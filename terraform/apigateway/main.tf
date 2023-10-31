@@ -40,7 +40,7 @@ resource "aws_api_gateway_authorizer" "custom" {
   rest_api_id            = aws_api_gateway_rest_api.api_fast_food.id
   authorizer_uri         = var.lambda_authorizadora_invokearn
 #  authorizer_credentials = "arn:aws:iam:us-east-1:734474252741:role/MyLambdaExecutionRole"
-#  authorizer_credentials = var.iam_role_arn
+  authorizer_credentials = var.iam_role_invocation_role
 #  identity_validation_expression = "Authorization"
   # type                   = "TOKEN"
   type                             = "REQUEST"
