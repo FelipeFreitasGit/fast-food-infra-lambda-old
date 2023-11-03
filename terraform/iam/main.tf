@@ -56,3 +56,18 @@ resource "aws_lambda_permission" "invoke_permission" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = var.execution_arn
 }
+
+
+data "aws_iam_policy_document" "invocation_policy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["lambda:InvokeFunction"]
+    resources = [var.execution_arn]
+  }
+}
+
+resource "aws_iam_role_policy" "invocation_policy" {
+  name   = "default"
+  role   = aws_iam_role.lambda_execution_role.id
+  policy = data.aws_iam_policy_document.invocation_policy.json
+}
